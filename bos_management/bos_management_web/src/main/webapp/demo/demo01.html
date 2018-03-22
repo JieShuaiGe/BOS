@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+	<title>Basic Layout - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../js/ztree/zTreeStyle.css">
+	<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+	<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../js/ztree/jquery.ztree.all-3.5.js"></script>
+	<script type="text/javascript">
+	$(function(){    
+	    $('#btn').bind('click', function(){ 
+	    	var result = $('#tt').tabs("exists", "哈哈")
+	    	if(result){
+	    		$('#tt').tabs("select", "哈哈")
+	    	}else{
+	    		 $('#tt').tabs('add',{    
+	    	    	    title:'哈哈',    
+	    	    	    closable:'true',    
+	    	    	});   
+	    	}
+	   }); 
+	    var setting = {
+				data : {
+					simpleData : {
+						enable : true
+					}
+				},
+				callback: {
+					onClick: function (event, treeId, treeNode) {
+						var pId = treeNode.pId
+						if(pId!=null){
+							var result = $('#tt').tabs("exists", treeNode.name)
+							if(result){
+					    		$('#tt').tabs("select", treeNode.name)
+					    	}else{
+					    		 $('#tt').tabs('add',{    
+					    	    	    title:treeNode.name,    
+					    	    	    closable:'true',
+					    	    	    content:'<iframe width="100%" height="100%" frameborder="0" src="../'+treeNode.page+'"></iframe>'
+					    	    	});   
+					    	}
+						}
+					}
+				}
+			};
+	    $.get("../data/menu.json",function(zNodes){
+	    	 $.fn.zTree.init($("#treeDemo"), setting, zNodes); 
+	    });
+	   /*  var zNodes = [
+	      			{"name":"节点1","id":"001","pId":"0"},
+	      			{"name":"节点2","id":"002","pId":"001"},
+	      			{"name":"节点3","id":"003","pId":"002"},
+	      			]
+	    $.fn.zTree.init($("#treeDemo"), setting, zNodes);  */
+	}); 
+	</script>
+	
+</head>
+<body class="easyui-layout">
+
+	
+		<div data-options="region:'north'" style="height:70px"></div>
+		<div data-options="region:'west',split:true" title="West" style="width:200px;">
+		   <div id="aa" class="easyui-accordion"  data-options="fit:'true'">   
+              <div title="Title1" >
+                 <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加选项卡</a> 
+              </div>    
+              <div title="Title2"  data-options="selected:true">
+                 <ul id="treeDemo" class="ztree"></ul>
+              </div> 
+              <div title="Title3"> </div> 
+           </div> 
+     	</div>
+		<div data-options="region:'center',title:'Main Title'">
+		   <div id="tt" class="easyui-tabs" data-options="fit:'true'" >   
+                 
+           </div>
+		 </div>
+			
+		
+
+</body>
+</html>
