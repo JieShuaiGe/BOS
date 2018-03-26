@@ -51,13 +51,13 @@ public class FixedAreaAction extends CommonAction<FixedArea>{
     }
     @Action(value="fixedAreaAction_findCustomersNotAssociated")
     public String findCustomersNotAssociated() throws Exception{
-        List<Customer> list  = (List<Customer>) WebClient.create("http://localhost:8180/crm/service/customerService/findCustomersNotAssociated")
+        List<Customer> list  = (List<Customer>) WebClient.create("http://localhost:8180/crm_/service/customerService/findCustomersNotAssociated")
         .accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON).getCollection(Customer.class);
         return list2json(list,null);
     }
     @Action(value="fixedAreaAction_findCustomersAssociated")
     public String findCustomersAssociated() throws Exception{
-        List<Customer> list  = (List<Customer>) WebClient.create("http://localhost:8180/crm/service/customerService/findCustomersAssociatedToFixedArea")
+        List<Customer> list  = (List<Customer>) WebClient.create("http://localhost:8180/crm_/service/customerService/findCustomersAssociatedToFixedArea")
                 .accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON).query("id", model.getId()).getCollection(Customer.class);
                 return list2json(list,null);
     }
@@ -67,7 +67,7 @@ public class FixedAreaAction extends CommonAction<FixedArea>{
     }
     @Action(value="fixedAreaAction_assignCustomers2FixedArea",results={@Result(name="success",location="/pages/base/fixed_area.html",type="redirect")})
     public String assignCustomers2FixedArea(){
-        WebClient.create("http://localhost:8180/crm/service/customerService/assignCustomers2FixedArea")
+        WebClient.create("http://localhost:8180/crm_/service/customerService/assignCustomers2FixedArea")
         .accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON).query("fixedAreaId", model.getId()).query("ids",customerIds).put(null);
         return SUCCESS;
     }

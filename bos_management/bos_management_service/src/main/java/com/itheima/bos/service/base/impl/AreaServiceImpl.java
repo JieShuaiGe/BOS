@@ -32,8 +32,9 @@ public void save(ArrayList<Area> list) {
 @Override
 public Page<Area> findAll(PageRequest pageable) {
     
-      
+    
     return areaRepository.findAll(pageable) ;
+    
 }
 @Override
 public List<Area> fingQ(String q) {

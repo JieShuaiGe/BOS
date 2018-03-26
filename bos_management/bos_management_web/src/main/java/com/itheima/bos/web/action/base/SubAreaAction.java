@@ -43,7 +43,7 @@ private SubAreaService subAreaService;
         PageRequest pageRequest = new PageRequest(page-1, rows);
         Page<SubArea> page= subAreaService.findAll(pageRequest);
       JsonConfig jsonConfig = new  JsonConfig();
-      jsonConfig.setExcludes(new String[] { "subareas" });
+      jsonConfig.setExcludes(new String[] { "subareas","couriers" });
       
         return page2json(page, jsonConfig);
     }

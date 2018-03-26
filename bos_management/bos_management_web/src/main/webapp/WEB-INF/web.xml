@@ -18,6 +18,15 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+	
+	<servlet>
+    <servlet-name>cxf</servlet-name>
+    <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+    <servlet-name>cxf</servlet-name>
+    <url-pattern>/service/*</url-pattern>
+    </servlet-mapping>
 	<!-- 配置Struts的前端控制器 -->
 	<filter>
 		<filter-name>struts</filter-name>
