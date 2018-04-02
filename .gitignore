@@ -53,3 +53,4 @@
 /crm_/.gitignore
 /crm_/.project
 /crm_/src/test
+/crm_/src/main/resources/applicationContext.xml

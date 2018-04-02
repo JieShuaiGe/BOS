@@ -21,5 +21,7 @@ public interface AreaService {
 
     List<Area> fingQ(String q);
 
+    List<Object[]> exportCharts();
+
 }
   

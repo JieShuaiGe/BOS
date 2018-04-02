@@ -112,6 +112,13 @@ public String findAll() throws Exception{
     return list2json(content, jsonConfig);
     
 }
+//获取HighCharts图表数据
+@Action(value = "areaAction_exportCharts")
+public String exportCharts() throws Exception {
+    List<Object[]> list = areaService.exportCharts();
+    
+    return list2json(list, null);
+}
 
 
 }

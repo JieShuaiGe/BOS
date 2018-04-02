@@ -42,5 +42,11 @@ public List<Area> fingQ(String q) {
      
     return areaRepository.fingQ(q);
 }
+@Override
+public List<Object[]> exportCharts() {
+      
+    return areaRepository.exportCharts(); 
+   
+}
 }
   

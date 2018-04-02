@@ -27,7 +27,7 @@
 	-->
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
 		<property name="driverClass" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="jdbcUrl" value="jdbc:oracle:thin:@192.168.44.86:1521:ORCL" />
+		<property name="jdbcUrl" value="jdbc:oracle:thin:@192.168.45.89:1521:ORCL" />
 		<property name="user" value="BOSJ" />
 		<property name="password" value="123456" />
 	</bean>
@@ -75,7 +75,16 @@
 	
  <context:component-scan base-package="com.itheima.bos.service,com.itheima.bos.web" />
 
-	<tx:annotation-driven transaction-manager="transactionManager" />
+	<tx:annotation-driven proxy-target-class="true" transaction-manager="transactionManager" />
+	
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">
+	  <property name="proxyTargetClass" value="true"></property>
+	</bean>
+	
+	<bean
+    class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+    <property name="securityManager" ref="securityManager"></property>
+    </bean>
 	<!--
 		#########################################################
 		指定Spring Data JPA要进行扫描的包,该包中的类框架会自动为其创建代理
@@ -83,9 +92,7 @@
 	-->
 	<jpa:repositories base-package="com.itheima.bos.dao.base" />
 	
-  
-   
-   <jaxrs:server address="/order">
+    <jaxrs:server address="/order">
 		<jaxrs:serviceBeans>
 			<ref bean="orderServiceImpl" />
 		</jaxrs:serviceBeans>
@@ -96,5 +103,73 @@
 			<bean class="org.apache.cxf.interceptor.LoggingOutInterceptor"></bean>
 		</jaxrs:outInterceptors>
 	</jaxrs:server>
+  
 
-</beans>
+<bean id="shirofilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+  <property name="securityManager" ref="securityManager"/>
+  <property name="loginUrl" value="/login.html"/>
+  <property name="successUrl" value="/index.html"/>
+  <property name="unauthorizedUrl" value="/unauthorized.html"/>
+  <property name="filterChainDefinitions">
+   <value>
+     /css/* = anon
+     /images/* = anon
+     /js/**=anon
+     /validatecode.jsp*=anon
+     /userAction_login.action = anon
+     /areaAction_pageQuery.action = perms["areaAction_pageQuery"]
+     /** = authc
+   </value>
+  </property>
+</bean>
+<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+  <property name="realm" ref="bosRealm"></property>
+  <!-- 注入缓存管理器 -->
+    <property name="cacheManager" ref="cacheManager" />
+</bean> 
+  
+  <!-- 注册缓存管理器  -->
+<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+    <property name="cacheManagerConfigFile" value="classpath:ehcache.xml" />
+</bean>
+
+
+
+<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+    <!-- 注入触发器 -->
+    <property name="triggers">
+       <array>
+         <ref bean="trigger" />
+       </array>
+    </property>
+</bean>
+<!-- 指定触发器 -->
+<bean id="trigger"
+    class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <!-- 注入jobdetail -->
+    <property name="jobDetail" ref="jobDetail" />
+    <!-- 指定调度规则 -->
+    <property name="cronExpression">
+       <!-- 0/5 * * * * ? -->
+       <value>0 0 0 1 * ? *</value>
+    </property>
+</bean>
+<bean id="jobDetail"
+    class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    <!-- 注入要调用的任务对象 -->
+    <property name="targetObject" ref="mailJob" />
+    <!-- 指定要调用的方法 -->
+    <property name="targetMethod" value="sendMail" />
+</bean>
+<bean id="mailJob" class="com.itheima.bos.jobs.MailJob"></bean>
+ </beans> 
+ 
+  
+  
+  
+   
+  
+  
+  
+  
+  
